@@ -80,7 +80,7 @@ fi
 
 # download sources if needed
 if [ ! -d "${CODECS_SRC_DIR}/av1" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://aomedia.googlesource.com/aom ${CODECS_SRC_DIR}/av1
+	gosu ${APP_USER}:${APP_USER} git clone https://github.com/edmond-zhu/aom.git ${CODECS_SRC_DIR}/av1
 	ln -s ${CODECS_SRC_DIR}/av1 ${CODECS_SRC_DIR}/av1-rt
 fi
 
@@ -93,7 +93,7 @@ if [ ! -d "${CODECS_SRC_DIR}/rav1e" ]; then
 fi
 
 if [ ! -d "${CODECS_SRC_DIR}/svt-av1" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://github.com/OpenVisualCloud/SVT-AV1.git ${CODECS_SRC_DIR}/svt-av1
+	gosu ${APP_USER}:${APP_USER} git clone https://github.com/Cidana-Developers/SVT-AV1.git ${CODECS_SRC_DIR}/svt-av1
 fi
 
 if [ ! -d "${CODECS_SRC_DIR}/vvc-vtm" ]; then
