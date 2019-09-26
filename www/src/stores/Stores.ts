@@ -30,7 +30,15 @@ export let analyzerBaseUrl = "/analyzer.html";
 var inMockMode = false;
 
 export function formatDate(date) {
-  return date.toISOString();
+//  return date.toISOString();
+  let date_str = date.getFullYear() + '-' + 
+  (date.getMonth() + 1) + '-' +
+  date.getDate() + 'T' +
+  date.getHours() + '-' +
+  date.getMinutes() + '-' +
+  date.getSeconds() + '.' +
+  date.getMilliseconds() + 'Z';
+  return date_str;
 }
 export function shallowEquals(a, b): boolean {
   if (a === b) return true;

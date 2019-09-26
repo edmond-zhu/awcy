@@ -184,9 +184,13 @@ RUN \
 		&& \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists && \
-	mkdir -p ${RD_TOOL_DIR} && \
-	rm -vf /etc/ssh/ssh_host_* && \
-	curl -sSL https://github.com/tdaede/rd_tool/tarball/master | tar zxf - -C ${RD_TOOL_DIR} --strip-components=1
+	rm -vf /etc/ssh/ssh_host_*
+#	 && \
+#	mkdir -p ${RD_TOOL_DIR} && \
+#	curl -sSL https://github.com/tdaede/rd_tool/tarball/master | tar zxf - -C ${RD_TOOL_DIR} --strip-components=1
+
+# copy rd_tool instead of pull from github
+ADD rd_tool ${RD_TOOL_DIR}
 
 # add code
 ADD package.json *.ts tsconfig.json ${APP_DIR}/
