@@ -2,6 +2,28 @@ Are We Compressed Yet?
 ====
 This repository contains the arewecompressedyet.com website source code.
 
+How to use DEV version of Docker
+=======
+
+This version support DEV docker for debugging source code in rd_tool and Web service.
+
+User can directly use the built image in docker hub:
+~~~
+docker pull jwduck/awcy:dev
+~~~
+Or build your own docker image with Dockerfile.dev:
+~~~
+cd <your_path_to_awcy>
+docker build -f ./Dockerfile.dev -t <your_docker_name>:<tag> .
+~~~
+
+To use this dev docker, you need to prepare your own rd_tool and www source code, and mount them in docker volumes as:
+~~~
+docker run -it --rm -w /etc -v <your_rdtool_path>:/opt/rd_tool -v <your_www_path>:/opt/app/www --publish 3000:3000 -v <your_awcy_data_path>:/data -v <your_awcy_media_path>:/media --env MEDIAS_SRC_DIR=/media --env AWCY_API_KEY=<your_api_key> --env LOCAL_WORKER_ENABLED=true --env LOCAL_WORKER_SLOTS=4 jwduck/awcy:dev bash
+> chmod 777 /etc/dev_launch.sh
+> /etc/dev_launch.sh
+~~~
+
 Running your own local copy of the website
 ===
 To run a local copy, you will need a copy of node and npm.

@@ -203,21 +203,21 @@ RUN \
 #	curl -sSL https://github.com/tdaede/rd_tool/tarball/master | tar zxf - -C ${RD_TOOL_DIR} --strip-components=1
 
 # copy rd_tool instead of pull from github
-ADD rd_tool ${RD_TOOL_DIR}
+#ADD rd_tool ${RD_TOOL_DIR}
 
 # add code
 ADD package.json *.ts tsconfig.json ${APP_DIR}/
-ADD www ${APP_DIR}/www
+#ADD www ${APP_DIR}/www
 
 # compile typescript/nodejs code
 RUN \
 	cd ${APP_DIR} && \
 	export PYTHON=python2.7 && \
 	npm install && \
-	npm run tsc && \
-	cd ${APP_DIR}/www && \
-	npm install && \
-	npm run build
+	npm run tsc
+#	cd ${APP_DIR}/www && \
+#	npm install && \
+#	npm run build
 
 # add scripts
 ADD *.m *.sh *.py ${APP_DIR}/
@@ -236,7 +236,7 @@ ENV \
 	RD_SERVER_PORT=4000
 
 # set entrypoint
-ENTRYPOINT [ "/etc/entrypoint" ]
+#ENTRYPOINT [ "/etc/entrypoint" ]
 
 # add configuration scripts
 ADD etc /etc
