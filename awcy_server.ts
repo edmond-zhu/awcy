@@ -188,7 +188,7 @@ app.get('/analyzer.html', function(req,res) {
   res.redirect('/analyzer' + req.originalUrl.substr(req.originalUrl.indexOf("?")));
 });
 app.use('/runs',express.static(runs_dst_dir));
-app.use('/sets.json',express.static(__dirname + '/rd_tool/sets.json'));
+app.use('/sets.json',express.static(config_dir + '/sets.json'));
 app.use('/error.txt',express.static(__dirname + '/error.txt'));
 app.use('/list.json',express.static(config_dir + '/list.json'));
 app.use('/ab_paths.json',express.static(__dirname + '/ab_paths.json'));
@@ -425,15 +425,16 @@ app.post('/submit/job',function(req,res) {
 });
 
 app.post('/submit/delete',function(req,res) {
-  const run = path.basename(req.body.run_id);
-  cp.execFile('nuke_branch.sh',[run],
+  const run = path.basename(req.body.run_id.replace(' ','_'));
+  console.log('Deleting '+ run);
+  cp.execFile('./nuke_branch.sh',[run],
               function(error,stdout,stderr) {
     res.send(stderr+stdout);
   });
 });
 
 app.post('/submit/cancel',function(req,res) {
-  const run_id = req.body.run_id;
+  const run_id = req.body.run_id.replace(' ','_');
   console.log('Cancelling '+run_id);
   request(config.rd_server_url+'/cancel?'+querystring.stringify({run_id: run_id}), function (error, response, body) {
     res.send('ok');
