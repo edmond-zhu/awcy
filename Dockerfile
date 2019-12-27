@@ -242,6 +242,34 @@ RUN \
 	npm install && \
 	npm run build
 
+# install vmaf
+ENV \
+	VMAF_DIR=/opt/vmaf
+
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+        build-essential \
+        ninja-build \
+        python3 \
+        python3-dev \
+        python3-pip \
+        python3-setuptools \
+        python3-tk \
+        && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists
+RUN pip3 install --upgrade pip
+RUN pip install numpy scipy matplotlib notebook pandas sympy nose scikit-learn scikit-image h5py sureal meson
+ENV PYTHONPATH=${VMAF_DIR}/python/src:${VMAF_DIR}:$PYTHONPATH
+ENV PATH=${VMAF_DIR}:${VMAF_DIR}/src/libvmaf:$PATH
+RUN \
+    mkdir -p $(dirname ${VMAF_DIR}) && \
+    git clone --depth 1 -b add_print_vmaf_score https://github.com/edmond-zhu/vmaf.git ${VMAF_DIR} && \
+    cd ${VMAF_DIR} && \
+	make
+
 # add scripts
 ADD *.m *.sh *.py ${APP_DIR}/
 
