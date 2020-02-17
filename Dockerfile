@@ -204,6 +204,7 @@ RUN \
 
 # copy rd_tool instead of pull from github
 ADD rd_tool ${RD_TOOL_DIR}
+RUN chmod --recursive a+x ${RD_TOOL_DIR}
 
 # add code
 ADD package.json *.ts tsconfig.json ${APP_DIR}/
