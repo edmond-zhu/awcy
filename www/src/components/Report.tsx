@@ -229,7 +229,7 @@ export class AnalyzerLinksComponent extends React.Component<{
 
 interface BDRateReportProps {
   a: Job,
-  b: Job,
+  b: Job
 }
 
 export class BDRateReportComponent extends React.Component<BDRateReportProps, {
@@ -394,7 +394,7 @@ export class BDRateReportComponent extends React.Component<BDRateReportProps, {
     interpolationOptions.push({ value: "pchip-new", label: "New interpolation method" });
     interpolationOptions.push({ value: "pchip-old", label: "Historic (AV1) interpolation method" });
     let textReport = this.state.textReport ? <pre>{this.state.textReport}</pre> : null;
-      return <Panel header={`BD Rate Report ${report.a.selectedName + " " + report.a.id} â†’ ${report.b.selectedName + " " + report.b.id}`}>
+      return <Panel header={`BD Rate Report ${report.a.selectedName + " " + report.a.id} â†?${report.b.selectedName + " " + report.b.id}`}>
         <div style={{ paddingBottom: 8, paddingTop: 4 }}>
           <Button active={this.state.reversed} onClick={this.onReverseClick.bind(this)} >Reverse</Button>{' '}
           <Button onClick={this.onTextReportClick.bind(this)} >Get Text Report</Button>

@@ -8,7 +8,7 @@ ENV \
 	LANG=C.UTF-8 \
 	LANGUAGE=C.UTF-8 \
 	DEBIAN_FRONTEND=noninteractive \
-	GPG_SERVERS="ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80"
+	GPG_SERVERS="ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80 pgp.mit.edu"
 
 # add runtime user
 RUN \
@@ -17,9 +17,9 @@ RUN \
 
 # install base build dependencies and useful packages
 RUN \
-	echo "deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse"           >/etc/apt/sources.list && \
-	echo "deb http://security.ubuntu.com/ubuntu focal-security main restricted universe multiverse" >>/etc/apt/sources.list && \
-	echo "deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse"  >>/etc/apt/sources.list && \
+	echo "deb http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse"           >/etc/apt/sources.list && \
+	echo "deb http://security.ubuntu.com/ubuntu bionic-security main restricted universe multiverse" >>/etc/apt/sources.list && \
+	echo "deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse"  >>/etc/apt/sources.list && \
 	apt-get update && \
 	apt-get install -y --no-install-recommends \
 		autoconf \
@@ -47,6 +47,7 @@ RUN \
 		libpng-dev \
 		libtool \
 		locales \
+		nasm \
 		netcat-openbsd \
 		net-tools \
 		openjdk-8-jdk-headless \
@@ -71,20 +72,6 @@ RUN \
 		&& \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists
-
-# install nasm
-RUN \
-	DIR=/tmp/nasm && \
-	NASM_URL=http://debian-archive.trafficmanager.net/debian/pool/main/n/nasm && \
-	NASM_VERSION=2.14.02-1 && \
-	NASM_DEB=nasm_${NASM_VERSION}_amd64.deb && \
-	NASM_SUM=5225d0654783134ae616f56ce8649e4df09cba191d612a0300cfd0494bb5a3ef && \
-	mkdir -p ${DIR} && \
-	cd ${DIR} && \
-	curl -O ${NASM_URL}/${NASM_DEB} && \
-	echo ${NASM_SUM} ${NASM_DEB} | sha256sum --check && \
-	dpkg -i ${NASM_DEB} && \
-	rm -rf ${DIR}
 
 # set working directory
 WORKDIR ${APP_DIR}
@@ -112,7 +99,8 @@ RUN \
 	curl -sSf --output /tmp/rustup-init https://static.rust-lang.org/rustup/archive/1.14.0/x86_64-unknown-linux-gnu/rustup-init && \
 	chmod +x /tmp/rustup-init && \
 	/tmp/rustup-init -y --no-modify-path --default-toolchain ${RUST_VERSION} && \
-	rm -vf /tmp/rustup-init
+	rm -vf /tmp/rustup-init && \
+	chmod -R a+w ${RUSTUP_HOME} ${CARGO_HOME}
 
 # install node 12.x
 RUN \
@@ -187,21 +175,11 @@ ENV \
 
 RUN \
 	mkdir -p $(dirname ${DAALATOOL_DIR}) && \
-	git clone https://gitlab.xiph.org/xiph/daala.git ${DAALATOOL_DIR} && \
+	git clone https://github.com/xiph/daala.git ${DAALATOOL_DIR} && \
 	cd ${DAALATOOL_DIR} && \
 	./autogen.sh && \
 	./configure --disable-player && \
 	make tools -j4
-
-# install ciede2000
-ENV \
-	CIEDE2000_DIR=/opt/dump_ciede2000
-
-RUN \
-	mkdir -p $(dirname ${CIEDE2000_DIR}) && \
-	git clone https://github.com/KyleSiefring/dump_ciede2000.git ${CIEDE2000_DIR} && \
-	cd ${CIEDE2000_DIR} && \
-	cargo build --release
 
 # install rd_tool and dependencies
 ENV \
