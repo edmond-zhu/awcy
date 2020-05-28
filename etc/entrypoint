@@ -58,14 +58,15 @@ fi
 # prepare awcy sets file if needed (and inject a quicktest set for scheduling testing)
 if [ ! -f "${CONFIG_DIR}/sets.json" ]; then
 	cp -f ${RD_TOOL_DIR}/sets.json ${RD_TOOL_DIR}/sets.dist.json
+	cp -f ${RD_TOOL_DIR}/sets.json ${CONFIG_DIR}/sets.json
 
 	# create fast set for testing
-	set_name=awcy-builder-quicktest
-	rm -rf ${MEDIAS_SRC_DIR}/${set_name}
-	mkdir -p ${MEDIAS_SRC_DIR}/${set_name}
-	wget --output-document ${MEDIAS_SRC_DIR}/${set_name}/test_frame.y4m https://people.xiph.org/~tdaede/sets/subset1-monochrome/Claudette_14_july_2003_1920Z.y4m
-	jq '. + {"'${set_name}'": {"type": "image", "sources": ["test_frame.y4m"]}}' ${RD_TOOL_DIR}/sets.dist.json >${CONFIG_DIR}/sets.json
-	chown -R ${APP_USER}:${APP_USER} ${MEDIAS_SRC_DIR}/${set_name}
+	# set_name=acwy-builder-quicktest
+	# rm -rf ${MEDIAS_SRC_DIR}/${set_name}
+	# mkdir -p ${MEDIAS_SRC_DIR}/${set_name}
+	# wget --output-document ${MEDIAS_SRC_DIR}/${set_name}/test_frame.y4m https://people.xiph.org/~tdaede/sets/subset1-monochrome/Claudette_14_july_2003_1920Z.y4m
+	# jq '. + {"'${set_name}'": {"type": "image", "sources": ["test_frame.y4m"]}}' ${RD_TOOL_DIR}/sets.dist.json >${CONFIG_DIR}/sets.json
+	# chown -R ${APP_USER}:${APP_USER} ${MEDIAS_SRC_DIR}/${set_name}
 	chown ${APP_USER}:${APP_USER} ${CONFIG_DIR}/sets.json
 fi
 
@@ -80,49 +81,49 @@ if [ ! -f "${CONFIG_DIR}/list.json" ]; then
 fi
 
 # download sources if needed
-if [ ! -d "${CODECS_SRC_DIR}/av1" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://github.com/edmond-zhu/aom.git ${CODECS_SRC_DIR}/av1
-	ln -s ${CODECS_SRC_DIR}/av1 ${CODECS_SRC_DIR}/av1-rt
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/av1" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/edmond-zhu/aom.git ${CODECS_SRC_DIR}/av1
+# 	ln -s ${CODECS_SRC_DIR}/av1 ${CODECS_SRC_DIR}/av1-rt
+# fi
 
-if [ ! -d "${CODECS_SRC_DIR}/daala" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://git.xiph.org/daala.git ${CODECS_SRC_DIR}/daala
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/daala" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/xiph/daala.git ${CODECS_SRC_DIR}/daala
+# fi
 
-if [ ! -d "${CODECS_SRC_DIR}/rav1e" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://github.com/xiph/rav1e.git ${CODECS_SRC_DIR}/rav1e
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/rav1e" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/xiph/rav1e.git ${CODECS_SRC_DIR}/rav1e
+# fi
 
 if [ ! -d "${CODECS_SRC_DIR}/svt-av1" ]; then
 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/Cidana-Developers/SVT-AV1.git ${CODECS_SRC_DIR}/svt-av1
 fi
 
-if [ ! -d "${CODECS_SRC_DIR}/vvc-vtm" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://vcgit.hhi.fraunhofer.de/jvet/VVCSoftware_VTM.git ${CODECS_SRC_DIR}/vvc-vtm
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/vvc-vtm" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://vcgit.hhi.fraunhofer.de/jvet/VVCSoftware_VTM.git ${CODECS_SRC_DIR}/vvc-vtm
+# fi
 
-if [ ! -d "${CODECS_SRC_DIR}/thor" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://github.com/cisco/thor.git ${CODECS_SRC_DIR}/thor
-	ln -s ${CODECS_SRC_DIR}/thor ${CODECS_SRC_DIR}/thor-rt
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/thor" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/cisco/thor.git ${CODECS_SRC_DIR}/thor
+# 	ln -s ${CODECS_SRC_DIR}/thor ${CODECS_SRC_DIR}/thor-rt
+# fi
 
-if [ ! -d "${CODECS_SRC_DIR}/x264" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://code.videolan.org/videolan/x264.git ${CODECS_SRC_DIR}/x264
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/x264" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/mirror/x264.git ${CODECS_SRC_DIR}/x264
+# fi
 
-if [ ! -d "${CODECS_SRC_DIR}/x265" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://github.com/videolan/x265.git ${CODECS_SRC_DIR}/x265
-	ln -s ${CODECS_SRC_DIR}/x265 ${CODECS_SRC_DIR}/x265-rt
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/x265" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/videolan/x265.git ${CODECS_SRC_DIR}/x265
+# 	ln -s ${CODECS_SRC_DIR}/x265 ${CODECS_SRC_DIR}/x265-rt
+# fi
 
-if [ ! -d "${CODECS_SRC_DIR}/libvpx" ]; then
-	gosu ${APP_USER}:${APP_USER} git clone https://github.com/webmproject/libvpx.git ${CODECS_SRC_DIR}/libvpx
-	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp8
-	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp8-rt
-	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp9
-	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp9-rt
-	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvpx-rt
-fi
+# if [ ! -d "${CODECS_SRC_DIR}/libvpx" ]; then
+# 	gosu ${APP_USER}:${APP_USER} git clone https://github.com/webmproject/libvpx.git ${CODECS_SRC_DIR}/libvpx
+# 	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp8
+# 	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp8-rt
+# 	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp9
+# 	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvp9-rt
+# 	ln -s ${CODECS_SRC_DIR}/libvpx ${CODECS_SRC_DIR}/libvpx-rt
+# fi
 
 # configure rd_tools
 if [ ! -f "${CONFIG_DIR}/machines.json" ]; then
