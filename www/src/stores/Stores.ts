@@ -499,21 +499,21 @@ export class Job {
   }
 
   static codecs = {
-    "daala": "Daala",
-    "x264": "x264",
-    "x265": "x265",
-    "x265-rt": "x265 Realtime",
-    "vp8": "VP8",
-    "vp9": "VP9",
-    "vp10": "VP10",
-    "vp10-rt": "VP10 Realtime",
-    "av1": "AV1 (High Latency CQP)",
-    "av1-rt": "AV1 (Low Latency CQP)",
-    "thor": "Thor",
-    "thor-rt": "Thor Realtime",
-    "rav1e": "rav1e",
-    "svt-av1": "SVT-AV1",
-    "vvc-vtm": "VVC VTM"
+    // "daala": "Daala",
+    // "x264": "x264",
+    // "x265": "x265",
+    // "x265-rt": "x265 Realtime",
+    // "vp8": "VP8",
+    // "vp9": "VP9",
+    // "vp10": "VP10",
+    // "vp10-rt": "VP10 Realtime",
+    // "av1": "AV1 (High Latency CQP)",
+    // "av1-rt": "AV1 (Low Latency CQP)",
+    // "thor": "Thor",
+    // "thor-rt": "Thor Realtime",
+    // "rav1e": "rav1e",
+    // "vvc-vtm": "VVC VTM",
+    "svt-av1": "SVT-AV1"
   };
 
   static sets = {};
