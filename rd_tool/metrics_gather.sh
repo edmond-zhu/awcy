@@ -2,7 +2,8 @@
 
 set -e
 
-export LD_LIBRARY_PATH=/usr/local/lib/
+echo $LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/x86_64-linux-gnu
 
 #3GB RAM limit
 ulimit -m 3000000
@@ -78,15 +79,15 @@ if [ -z "$DUMP_MSSSIM" ]; then
 fi
 
 if [ -z "$DUMP_CIEDE" ]; then
-  export DUMP_CIEDE="$DAALATOOL_ROOT/../dump_ciede2000/target/release/dump_ciede2000"
+  export DUMP_CIEDE="$DAALATOOL_ROOT/../dump_ciede2000/dump_ciede2000"
 fi
 
-if [ -z "$VMAF_ROOT" ]; then
-  export VMAF_ROOT="$DAALATOOL_ROOT/../vmaf"
+if [ -z "$VMAF_MODEL" ]; then
+  export VMAF_MODEL="/usr/local/share/model"
 fi
 
 if [ -z "$VMAFOSSEXEC" ]; then
-  export VMAFOSSEXEC="$VMAF_ROOT/libvmaf/build/tools/vmafossexec"
+  export VMAFOSSEXEC="/usr/local/bin/vmafossexec"
 fi
 
 if [ -z "$YUV2YUV4MPEG" ]; then
@@ -227,12 +228,14 @@ rav1e)
   SIZE=$(stat -c %s $BASENAME.ivf)
   ;;
 svt-av1)
-  export LD_LIBRARY_PATH=$(dirname "$SVTAV1")
+  LD_LIBRARY_PATH_BACK=${LD_LIBRARY_PATH}
+  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(dirname "$SVTAV1")
   # svt-av1 has a max intra period of 255
   $($TIMER $SVTAV1 -i $FILE -enc-mode 8 -lp 1 -q $x -o $BASENAME.yuv -b $BASENAME.ivf -w $WIDTH -h $HEIGHT -intra-period 255 -stat-report 1 $EXTRA_OPTIONS > $BASENAME-stdout.txt 2>&1)
   $YUV2YUV4MPEG $BASENAME -w$WIDTH -h$HEIGHT > /dev/null
   rm $BASENAME.yuv
   SIZE=$(stat -c %s $BASENAME.ivf)
+  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH_BACK}
   ;;
 esac
 
@@ -296,7 +299,7 @@ if [ -f "$VMAFOSSEXEC" ]; then
   esac
   "$DAALATOOL_ROOT/tools/y4m2yuv" "$FILE" -o ref
   "$DAALATOOL_ROOT/tools/y4m2yuv" "$BASENAME.y4m" -o dis
-  VMAF=$("$VMAFOSSEXEC" $FORMAT $WIDTH $HEIGHT ref dis "$VMAF_ROOT/model/vmaf_v0.6.1.pkl" --thread 1 | tail -n 1)
+  VMAF=$("$VMAFOSSEXEC" $FORMAT $WIDTH $HEIGHT ref dis "$VMAF_MODEL/vmaf_v0.6.1.pkl" --thread 1 | tail -n 1)
   rm -f ref dis
   echo "$VMAF"
 else
